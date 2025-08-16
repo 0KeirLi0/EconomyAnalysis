@@ -179,3 +179,21 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+
+
+*.log
+*.out
+*.pid
+*.seed
+*.gz
