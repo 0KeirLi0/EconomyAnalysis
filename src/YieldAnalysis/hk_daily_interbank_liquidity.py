@@ -201,7 +201,7 @@ for i, (fig, title) in enumerate(figs, 1):
 
 html += "</body>\n</html>"
 
-output_path = os.path.abspath(os.path.join(os.path.abspath(os.path.join(os.getcwd(), "..")), ".."))+ "/docs/charts.html"
+output_path = '/home/runner/work/EconomyAnalysis/EconomyAnalysis/docs/charts.html'
 with open(output_path, "w", encoding="utf-8") as f:
     f.write(html)
     
