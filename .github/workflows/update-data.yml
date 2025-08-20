@@ -2,7 +2,7 @@ name: Update Data with Python Script
 
 on:
   schedule:
-    - cron: '0 2 * * *' 
+    - cron: '17 3 * * 1-5' # Every weekday at 03:17 UTC (11:17 HKT)
   workflow_dispatch: 
 
 jobs:

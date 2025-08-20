@@ -13,32 +13,61 @@ response = json.loads(response)
 df = pd.DataFrame(response['result']['records'])
 df['end_of_date'] = pd.to_datetime(df['end_of_date'])
 
-hibor_df = df[['end_of_date', 'hibor_overnight', 'hibor_fixing_1m']].head(251)
+# HIBOR
 
+# HKAB API URLs for yield data
+# TODO: import function from utils
+def get_hibor(startDate, endDate)->pd.DataFrame:
+    selected_keys = ['Overnight', '1 Week', '2 Weeks', '1 Month', '2 Months', '3 Months', '6 Months', '12 Months']
+    hibor_df = pd.DataFrame(columns=selected_keys)
+    for date in pd.date_range(startDate, endDate):
+        # print(date)
+        if date.dayofweek <5:
+            year = date.year
+            month = date.month
+            day = date.day
+            hibor_url = f"https://www.hkab.org.hk/api/hibor?year={year}&month={month}&day={day}"
+            hibor_response = requests.get(hibor_url).json()
+            if hibor_response['isHoliday']==False:
+                temp_df = pd.DataFrame(hibor_response, index=[date], columns=selected_keys)
+                hibor_df = pd.concat([hibor_df, temp_df], ignore_index=False)
+    hibor_df=hibor_df.dropna().sort_index(ascending=False).reset_index(drop=False).rename(columns={'index':'date'})
+    return hibor_df
+
+endDate = pd.Timestamp.now(tz='Asia/Hong_Kong').strftime('%Y-%m-%d')
+startDate =(pd.Timestamp.now(tz='Asia/Hong_Kong') - pd.Timedelta(days=365)).strftime('%Y-%m-%d')
+hibor_df = get_hibor(startDate, endDate)
+
+hibor_df = hibor_df.head(251)
 hibor_fig = px.line(hibor_df,
-             x='end_of_date', y=['hibor_overnight', 'hibor_fixing_1m'],
-             title='HIBOR Rates (Overnight & 1-Month)',
+             x='date', y=['Overnight', '1 Week', '1 Month', '3 Months', '6 Months', '12 Months'],
+             title='HIBOR Rates',
              labels={'end_of_date': 'Date', 'value': 'HIBOR Rate (%)'},
              )
 
-last_date = hibor_df['end_of_date'].iloc[0]
-last_overnight = hibor_df['hibor_overnight'].iloc[0]
-last_1m = hibor_df['hibor_fixing_1m'].iloc[0]
+last_date = hibor_df['date'].iloc[0].strftime('%Y-%m-%d')
+last_overnight = round(hibor_df['Overnight'].iloc[0],2)
+last_1m = round(hibor_df['1 Month'].iloc[0], 2)
+last_3m = round(hibor_df['3 Months'].iloc[0], 2)
+last_6m = round(hibor_df['6 Months'].iloc[0], 2)
+last_12m = round(hibor_df['12 Months'].iloc[0], 2)
 
 hibor_fig.add_annotation(
-    text=f"Date: {last_date.strftime('%Y-%m-%d')}<br>Overnight: {last_overnight}%<br>1M: {last_1m}%",
+    text=f"Date: {last_date}<br>Overnight: {last_overnight}%<br>1M: {last_1m}%<br>3M: {last_3m}%<br>6M: {last_6m}%<br>12M: {last_12m}%",
     xref="paper", yref="paper",
     x=1, y=1.2,  
     showarrow=False,
     bgcolor="rgba(1, 108, 2, 1)",
     borderwidth=2,
-    font=dict(size=12, color="white")
+    font=dict(size=12, color="white"),
+    align='right',
 )
 
 hibor_fig.update_layout(
     xaxis_rangeslider_visible=True,
 )
 
+# AggreBal
 aggreBal_df = df[['end_of_date', 'opening_balance', 'closing_balance']].head(251)
 aggreBal_df['day_change'] = aggreBal_df['closing_balance'] - aggreBal_df['opening_balance']
 aggreBal_df['high'] = aggreBal_df[['opening_balance', 'closing_balance']].max(axis=1)
@@ -76,6 +105,7 @@ aggreBal_fig.update_layout(
     yaxis_title="Balance (HKD Million)",
 )
 
+# cu
 usdhkd = yf.Ticker("HKD=X")
 usdhkd_df = usdhkd.history(period ='max').reset_index()
 usdhkd_df['Date'] = pd.to_datetime(usdhkd_df['Date'], format='%Y-%m-%d')
@@ -115,6 +145,7 @@ cu_fig.update_layout(
     xaxis_rangeslider_visible=True,
 )
 
+#hkdtwi
 hkdtwi_df = df[['end_of_date', 'twi']].head(251)
 hkdtwi_fig = px.line(hkdtwi_df,
              x='end_of_date', y='twi',
@@ -140,6 +171,7 @@ hkdtwi_fig.update_layout(
     xaxis_rangeslider_visible=True,
 )
 
+#hsi
 hsi = yf.Ticker("^HSI")
 hsi_df = hsi.history(period ='251d').reset_index()
 hsi_df.set_index('Date', inplace=True)
@@ -180,6 +212,7 @@ figs = [
     (hkdtwi_fig, "HKDTWI"),
 ]
 
+#html
 html = """<!DOCTYPE html>
 <html>
 <head>
