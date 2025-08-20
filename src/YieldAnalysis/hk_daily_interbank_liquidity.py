@@ -13,7 +13,7 @@ response = json.loads(response)
 df = pd.DataFrame(response['result']['records'])
 df['end_of_date'] = pd.to_datetime(df['end_of_date'])
 
-hibor_df = df[['end_of_date', 'hibor_overnight', 'hibor_fixing_1m']]
+hibor_df = df[['end_of_date', 'hibor_overnight', 'hibor_fixing_1m']].head(251)
 
 hibor_fig = px.line(hibor_df,
              x='end_of_date', y=['hibor_overnight', 'hibor_fixing_1m'],
@@ -39,7 +39,7 @@ hibor_fig.update_layout(
     xaxis_rangeslider_visible=True,
 )
 
-aggreBal_df = df[['end_of_date', 'opening_balance', 'closing_balance']].head(200)
+aggreBal_df = df[['end_of_date', 'opening_balance', 'closing_balance']].head(251)
 aggreBal_df['day_change'] = aggreBal_df['closing_balance'] - aggreBal_df['opening_balance']
 aggreBal_df['high'] = aggreBal_df[['opening_balance', 'closing_balance']].max(axis=1)
 aggreBal_df['low'] = aggreBal_df[['opening_balance', 'closing_balance']].min(axis=1)
@@ -85,7 +85,7 @@ usdhkd_df['end_of_date'] = pd.to_datetime(usdhkd_df['end_of_date'])
 usdhkd_df.set_index('end_of_date', inplace=True)
 usdhkd_df.index = usdhkd_df.index.tz_localize(None)
 
-cu_df = df[['end_of_date', 'cu_weakside', "cu_strongside"]]
+cu_df = df[['end_of_date', 'cu_weakside', "cu_strongside"]].head(251)
 cu_df['end_of_date'] = pd.to_datetime(cu_df['end_of_date'])
 cu_df = cu_df.set_index('end_of_date').join(usdhkd_df, on='end_of_date', how='left')
 cu_df = cu_df.reset_index()
@@ -115,7 +115,7 @@ cu_fig.update_layout(
     xaxis_rangeslider_visible=True,
 )
 
-hkdtwi_df = df[['end_of_date', 'twi']]
+hkdtwi_df = df[['end_of_date', 'twi']].head(251)
 hkdtwi_fig = px.line(hkdtwi_df,
              x='end_of_date', y='twi',
              title='HKD Trade-Weighted Index (TWI)',
@@ -141,7 +141,7 @@ hkdtwi_fig.update_layout(
 )
 
 hsi = yf.Ticker("^HSI")
-hsi_df = hsi.history(period ='10y').reset_index()
+hsi_df = hsi.history(period ='251d').reset_index()
 hsi_df.set_index('Date', inplace=True)
 hsi_df.index = hsi_df.index.tz_localize(None)
 hsi_df.sort_values(by='Date', ascending=False, inplace=True)
