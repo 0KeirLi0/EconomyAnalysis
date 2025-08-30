@@ -42,9 +42,8 @@ def plot_hibor(hibor_df):
         bgcolor="rgba(1, 108, 2, 1)", borderwidth=2,
         font=dict(size=12, color="white"), align='right',
     )
-    hibor_fig.update_layout(xaxis_rangeslider_visible=True)
     hibor_fig.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
@@ -79,13 +78,12 @@ def plot_aggreBal(df):
         font=dict(size=12, color="white")
     )
     aggreBal_fig.update_layout(
-        xaxis_rangeslider_visible=True,
         title="Hong Kong Aggregate Balance (Candlestick)",
         xaxis_title="Date",
         yaxis_title="Balance (HKD Million)",
     )
     aggreBal_fig.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
@@ -153,9 +151,8 @@ def plot_hkdtwi(df):
         bgcolor="rgba(156, 33, 315, 1)", borderwidth=2,
         font=dict(size=12, color="white")
     )
-    hkdtwi_fig.update_layout(xaxis_rangeslider_visible=True)
     hkdtwi_fig.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
@@ -189,9 +186,8 @@ def plot_hsi():
         bgcolor="rgba(156, 33, 315, 1)", borderwidth=2,
         font=dict(size=12, color="white")
     )
-    hsi_fig.update_layout(xaxis_rangeslider_visible=True)
     hsi_fig.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
@@ -231,9 +227,8 @@ def plot_sofr_vs_hibor(hibor_sofr_df):
         title='SOFR 1M vs HIBOR 1M',
         labels={'value': 'Rate (%)', 'date': 'Date'}
     )
-    hibor_sofr_fig.update_layout(xaxis_rangeslider_visible=True)
     hibor_sofr_fig.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
@@ -252,9 +247,8 @@ def plot_sofr_vs_hibor(hibor_sofr_df):
         title='SOFR 1M minus HIBOR 1M',
         labels={'date': 'Date', 'SOFR minus HIBOR': 'SOFR 1M - HIBOR 1M (%)'}
     )
-    fig_diff.update_layout(xaxis_rangeslider_visible=True)
     fig_diff.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
