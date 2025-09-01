@@ -26,7 +26,7 @@ jobs:
 
 
       - name: Run Python script to update data
-        run: python src/YieldAnalysis/hk_daily_interbank_liquidity.py
+        run: python src/hk_chart/hk_daily_interbank_liquidity.py
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5

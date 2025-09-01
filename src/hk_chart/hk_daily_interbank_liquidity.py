@@ -121,9 +121,8 @@ def plot_currency(df):
         bgcolor="rgba(108, 1, 2, 1)", borderwidth=2,
         font=dict(size=12, color="white")
     )
-    cu_fig.update_layout(xaxis_rangeslider_visible=True)
     cu_fig.update_xaxes(
-        rangeslider_visible=True,
+        rangeslider_visible=False,
         rangeselector=dict(
             buttons=list([
                 dict(count=1, label="1m", step="month", stepmode="backward"),
@@ -281,7 +280,7 @@ def generate_html(figs, output_path):
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
 
-def main():
+def hkfigs_generation():
     df = fetch_interbank_liquidity()
     endDate = pd.Timestamp.now(tz='Asia/Hong_Kong').strftime('%Y-%m-%d')
     startDate = (pd.Timestamp.now(tz='Asia/Hong_Kong') - pd.Timedelta(days=365)).strftime('%Y-%m-%d')
@@ -299,10 +298,15 @@ def main():
         (aggreBal_fig, "AggreBal"),
         (hsi_fig, "HSI"),
         (cu_fig, "Currency"),
-        (hkdtwi_fig, "HKDTWI"),
+        (hkdtwi_fig, "HKD--TWI"),
         (hibor_sofr_fig, "SOFR vs HIBOR"),
         (hibor_sofr_diff, "SOFR - HIBOR"),
     ]
+    return figs
+
+
+def main():
+    figs = hkfigs_generation()
     output_path = '/home/runner/work/EconomyAnalysis/EconomyAnalysis/docs/hkcharts.html'
     generate_html(figs, output_path)
 
